@@ -20,6 +20,8 @@ import Recipe from "./recipe";
 import { RecipeInterface, APIInterface } from "./types";
 import BackwardCompatibilityEmailService from "./emaildelivery/services/backwardCompatibility";
 import BackwardCompatibilitySmsService from "./smsdelivery/services/backwardCompatibility";
+import SessionError from "../session/error";
+import { logDebugMessage } from "../../logger";
 
 export function validateAndNormaliseUserInput(
     recipeInstance: Recipe,
@@ -136,7 +138,13 @@ function validateAndNormaliseEmailVerificationConfig(
                           userInfo === undefined ||
                           config?.emailVerificationFeature?.createAndSendCustomEmail === undefined
                       ) {
-                          throw new Error("Unknown User ID provided");
+                          logDebugMessage(
+                              "createAndSendCustomEmail: returning UNAUTHORISED because userInfo is undefined"
+                          );
+                          throw new SessionError({
+                              type: SessionError.UNAUTHORISED,
+                              message: "Unknown User ID provided",
+                          });
                       }
                       return await config.emailVerificationFeature.createAndSendCustomEmail(
                           userInfo,
@@ -156,7 +164,13 @@ function validateAndNormaliseEmailVerificationConfig(
                           userInfo === undefined ||
                           config?.emailVerificationFeature?.getEmailVerificationURL === undefined
                       ) {
-                          throw new Error("Unknown User ID provided");
+                          logDebugMessage(
+                              "getEmailVerificationURL: returning UNAUTHORISED because userInfo is undefined"
+                          );
+                          throw new SessionError({
+                              type: SessionError.UNAUTHORISED,
+                              message: "Unknown User ID provided",
+                          });
                       }
                       return await config.emailVerificationFeature.getEmailVerificationURL(userInfo, userContext);
                   },

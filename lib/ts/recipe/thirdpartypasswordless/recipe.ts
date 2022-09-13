@@ -42,6 +42,8 @@ import { Querier } from "../../querier";
 import OverrideableBuilder from "supertokens-js-override";
 import EmailDeliveryIngredient from "../../ingredients/emaildelivery";
 import SmsDeliveryIngredient from "../../ingredients/smsdelivery";
+import SessionError from "../session/error";
+import { logDebugMessage } from "../../logger";
 
 export default class Recipe extends RecipeModule {
     private static instance: Recipe | undefined = undefined;
@@ -348,7 +350,13 @@ export default class Recipe extends RecipeModule {
     getEmailForUserIdForEmailVerification = async (userId: string, userContext: any): Promise<string> => {
         let userInfo = await this.recipeInterfaceImpl.getUserById({ userId, userContext });
         if (userInfo === undefined) {
-            throw new Error("Unknown User ID provided");
+            logDebugMessage(
+                "getEmailForUserIdForEmailVerification: returning UNAUTHORISED because userInfo is undefined"
+            );
+            throw new SessionError({
+                type: SessionError.UNAUTHORISED,
+                message: "Unknown User ID provided",
+            });
         } else if (!("thirdParty" in userInfo)) {
             // this is a passwordless user
             if (userInfo.email !== undefined) {

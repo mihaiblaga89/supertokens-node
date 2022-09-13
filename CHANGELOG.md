@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Fixed:
+
+-   Fixed `500` error when calling email verification related endpoints with an unknown/deleted user id
+
 ## [11.3.0] - 2022-08-30
 
 ### Added:

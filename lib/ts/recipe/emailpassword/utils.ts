@@ -31,6 +31,8 @@ import { TypeInput as TypeNormalisedInputEmailVerification } from "../emailverif
 import { getResetPasswordURL as defaultGetResetPasswordURL } from "./passwordResetFunctions";
 import { RecipeInterface, APIInterface } from "./types";
 import BackwardCompatibilityService from "./emaildelivery/services/backwardCompatibility";
+import SessionError from "../session/error";
+import { logDebugMessage } from "../../logger";
 
 export function validateAndNormaliseUserInput(
     recipeInstance: Recipe,
@@ -124,7 +126,13 @@ export function validateAndNormaliseEmailVerificationConfig(
                           userInfo === undefined ||
                           config?.emailVerificationFeature?.createAndSendCustomEmail === undefined
                       ) {
-                          throw new Error("Unknown User ID provided");
+                          logDebugMessage(
+                              "createAndSendCustomEmail: returning UNAUTHORISED because userInfo is undefined"
+                          );
+                          throw new SessionError({
+                              type: SessionError.UNAUTHORISED,
+                              message: "Unknown User ID provided",
+                          });
                       }
                       return await config.emailVerificationFeature.createAndSendCustomEmail(
                           userInfo,
@@ -144,7 +152,13 @@ export function validateAndNormaliseEmailVerificationConfig(
                           userInfo === undefined ||
                           config?.emailVerificationFeature?.getEmailVerificationURL === undefined
                       ) {
-                          throw new Error("Unknown User ID provided");
+                          logDebugMessage(
+                              "getEmailVerificationURL: returning UNAUTHORISED because userInfo is undefined"
+                          );
+                          throw new SessionError({
+                              type: SessionError.UNAUTHORISED,
+                              message: "Unknown User ID provided",
+                          });
                       }
                       return await config.emailVerificationFeature.getEmailVerificationURL(userInfo, userContext);
                   },

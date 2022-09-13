@@ -32,6 +32,8 @@ import appleRedirectHandler from "./api/appleRedirect";
 import OverrideableBuilder from "supertokens-js-override";
 import EmailDeliveryIngredient from "../../ingredients/emaildelivery";
 import { TypeThirdPartyEmailDeliveryInput } from "./types";
+import SessionError from "../session/error";
+import { logDebugMessage } from "../../logger";
 
 export default class Recipe extends RecipeModule {
     private static instance: Recipe | undefined = undefined;
@@ -217,7 +219,11 @@ export default class Recipe extends RecipeModule {
     getEmailForUserId = async (userId: string, userContext: any) => {
         let userInfo = await this.recipeInterfaceImpl.getUserById({ userId, userContext });
         if (userInfo === undefined) {
-            throw Error("Unknown User ID provided");
+            logDebugMessage("getEmailForUserId: returning UNAUTHORISED because userInfo is undefined");
+            throw new SessionError({
+                type: SessionError.UNAUTHORISED,
+                message: "Unknown User ID provided",
+            });
         }
         return userInfo.email;
     };

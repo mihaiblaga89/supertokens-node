@@ -17,6 +17,8 @@ import { User as EmailVerificationUser } from "../../../../emailverification/typ
 import { NormalisedAppinfo } from "../../../../../types";
 import EmailVerificationBackwardCompatibilityService from "../../../../emailverification/emaildelivery/services/backwardCompatibility";
 import { EmailDeliveryInterface } from "../../../../../ingredients/emaildelivery/types";
+import SessionError from "../../../../session/error";
+import { logDebugMessage } from "../../../../../logger";
 
 export default class BackwardCompatibilityService implements EmailDeliveryInterface<TypeThirdPartyEmailDeliveryInput> {
     private emailVerificationBackwardCompatibilityService: EmailVerificationBackwardCompatibilityService;
@@ -48,7 +50,13 @@ export default class BackwardCompatibilityService implements EmailDeliveryInterf
                                   userContext,
                               });
                               if (userInfo === undefined) {
-                                  throw new Error("Unknown User ID provided");
+                                  logDebugMessage(
+                                      "createAndSendCustomEmail: returning UNAUTHORISED because userInfo is undefined"
+                                  );
+                                  throw new SessionError({
+                                      type: SessionError.UNAUTHORISED,
+                                      message: "Unknown User ID provided",
+                                  });
                               }
                               return await inputCreateAndSendCustomEmail(userInfo, link, userContext);
                           },
