@@ -17,3 +17,5 @@ export const DASHBOARD_API = "/dashboard";
 export const VALIDATE_KEY_API = "/api/key/validate";
 export const USERS_LIST_GET_API = "/api/users";
 export const USERS_COUNT_API = "/api/users/count";
+export const USER_INFO_API = "/api/user";
+export const EMAIL_VERIFY_API = "/api/user/email/verify";
