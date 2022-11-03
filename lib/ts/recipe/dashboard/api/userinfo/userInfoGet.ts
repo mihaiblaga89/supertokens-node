@@ -28,6 +28,7 @@ export default async function userInfoGet(_: APIInterface, options: APIOptions):
 
     let user;
 
+    // TODO: For each recipe type check which super recipe was initialised, for example email password needs to check of email and tpep recipes
     if (recipeId === EmailPasswordRecipe.RECIPE_ID) {
         user = await EmailPassword.getUserById(userId);
     } else if (recipeId === ThirdPartyRecipe.RECIPE_ID) {

@@ -23,6 +23,8 @@ import {
     USERS_COUNT_API,
     USERS_LIST_GET_API,
     USER_INFO_API,
+    USER_METADATA_API,
+    USER_SESSIONS_API,
     VALIDATE_KEY_API,
 } from "./constants";
 import { APIInterface, RecipeInterface, TypeInput, TypeNormalisedInput } from "./types";
@@ -82,6 +84,14 @@ export function getApiIdIfMatched(path: NormalisedURLPath, method: HTTPMethod): 
 
     if (path.getAsStringDangerous().endsWith(EMAIL_VERIFY_API) && method === "get") {
         return EMAIL_VERIFY_API;
+    }
+
+    if (path.getAsStringDangerous().endsWith(USER_SESSIONS_API) && method === "get") {
+        return USER_SESSIONS_API;
+    }
+
+    if (path.getAsStringDangerous().endsWith(USER_METADATA_API) && method === "get") {
+        return USER_METADATA_API;
     }
 
     return undefined;

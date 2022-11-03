@@ -26,6 +26,8 @@ import {
     USERS_COUNT_API,
     USERS_LIST_GET_API,
     USER_INFO_API,
+    USER_METADATA_API,
+    USER_SESSIONS_API,
     VALIDATE_KEY_API,
 } from "./constants";
 import NormalisedURLPath from "../../normalisedURLPath";
@@ -38,6 +40,8 @@ import usersGet from "./api/usersGet";
 import usersCountGet from "./api/usersCountGet";
 import userInfoGet from "./api/userinfo/userInfoGet";
 import { isEmailVerifiedAPI } from "./api/userinfo/emailverification";
+import { userSessionsGet } from "./api/userinfo/session";
+import userMetaDataGet from "./api/userinfo/userMetaDataGet";
 
 export default class Recipe extends RecipeModule {
     private static instance: Recipe | undefined = undefined;
@@ -145,6 +149,10 @@ export default class Recipe extends RecipeModule {
             apiFunction = userInfoGet;
         } else if (id === EMAIL_VERIFY_API) {
             apiFunction = isEmailVerifiedAPI;
+        } else if (id === USER_SESSIONS_API) {
+            apiFunction = userSessionsGet;
+        } else if (id === USER_METADATA_API) {
+            apiFunction = userMetaDataGet;
         }
 
         // If the id doesnt match any APIs return false
